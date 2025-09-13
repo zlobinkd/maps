@@ -1,0 +1,11 @@
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp;C:\Users\Konstantin\source\repos\maps\maps\x64\Release\bounds.obj
+C:\Users\Konstantin\source\repos\maps\maps\connection.cpp;C:\Users\Konstantin\source\repos\maps\maps\x64\Release\connection.obj
+C:\Users\Konstantin\source\repos\maps\maps\guiUtils.cpp;C:\Users\Konstantin\source\repos\maps\maps\x64\Release\guiUtils.obj
+C:\Users\Konstantin\source\repos\maps\maps\main.cpp;C:\Users\Konstantin\source\repos\maps\maps\x64\Release\main.obj
+C:\Users\Konstantin\source\repos\maps\maps\map.cpp;C:\Users\Konstantin\source\repos\maps\maps\x64\Release\map.obj
+C:\Users\Konstantin\source\repos\maps\maps\mapFiltering.cpp;C:\Users\Konstantin\source\repos\maps\maps\x64\Release\mapFiltering.obj
+C:\Users\Konstantin\source\repos\maps\maps\myXmlParser.cpp;C:\Users\Konstantin\source\repos\maps\maps\x64\Release\myXmlParser.obj
+C:\Users\Konstantin\source\repos\maps\maps\myXmlWriter.cpp;C:\Users\Konstantin\source\repos\maps\maps\x64\Release\myXmlWriter.obj
+C:\Users\Konstantin\source\repos\maps\maps\node.cpp;C:\Users\Konstantin\source\repos\maps\maps\x64\Release\node.obj
+C:\Users\Konstantin\source\repos\maps\maps\relation.cpp;C:\Users\Konstantin\source\repos\maps\maps\x64\Release\relation.obj
+C:\Users\Konstantin\source\repos\maps\maps\way.cpp;C:\Users\Konstantin\source\repos\maps\maps\x64\Release\way.obj

@@ -1,0 +1,119 @@
+﻿  bounds.cpp
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(69,33): warning C4244: инициализация: преобразование "const _Ty" в "size_t", возможна потеря данных
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(69,33): warning C4244:         with
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(69,33): warning C4244:         [
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(69,33): warning C4244:             _Ty=double
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(69,33): warning C4244:         ]
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(69,21): warning C4244: инициализация: преобразование "const _Ty" в "const size_t", возможна потеря данных
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(69,21): warning C4244:         with
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(69,21): warning C4244:         [
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(69,21): warning C4244:             _Ty=double
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(69,21): warning C4244:         ]
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(70,28): warning C4334: <<: результат 32-разрядного смещения неявно преобразуется в 64-разрядное значение (предполагалось 64-разрядное смещение?)
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(72,29): warning C4244: инициализация: преобразование "const _Ty" в "size_t", возможна потеря данных
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(72,29): warning C4244:         with
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(72,29): warning C4244:         [
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(72,29): warning C4244:             _Ty=double
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(72,29): warning C4244:         ]
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(72,17): warning C4244: инициализация: преобразование "const _Ty" в "const size_t", возможна потеря данных
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(72,17): warning C4244:         with
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(72,17): warning C4244:         [
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(72,17): warning C4244:             _Ty=double
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(72,17): warning C4244:         ]
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(75,29): warning C4244: инициализация: преобразование "const _Ty" в "size_t", возможна потеря данных
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(75,29): warning C4244:         with
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(75,29): warning C4244:         [
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(75,29): warning C4244:             _Ty=double
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(75,29): warning C4244:         ]
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(75,17): warning C4244: инициализация: преобразование "const _Ty" в "const size_t", возможна потеря данных
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(75,17): warning C4244:         with
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(75,17): warning C4244:         [
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(75,17): warning C4244:             _Ty=double
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(75,17): warning C4244:         ]
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(87,29): warning C4334: <<: результат 32-разрядного смещения неявно преобразуется в 64-разрядное значение (предполагалось 64-разрядное смещение?)
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(99,9): error C2665: "Bounds::scalesAndCoords": ни одна перегруженная функция не может преобразовать все типы аргументов
+  connection.cpp
+      C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(97,59):
+      может быть "std::vector<std::array<std::array<size_t,2>,2>,std::allocator<std::array<std::array<size_t,2>,2>>> Bounds::scalesAndCoords(const Node &) const"
+          C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(99,9):
+          "std::vector<std::array<std::array<size_t,2>,2>,std::allocator<std::array<std::array<size_t,2>,2>>> Bounds::scalesAndCoords(const Node &) const": невозможно преобразовать аргумент 1 из "initializer list" в "const Node &"
+              C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(99,25):
+              Причина: невозможно преобразовать "initializer list" в "const Node"
+              C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(99,25):
+              "Node::Node": ни одна перегруженная функция не может преобразовать все типы аргументов
+                  C:\Users\Konstantin\source\repos\maps\maps\node.h(18,2):
+                  может быть "Node::Node(id_t,double,double,const Node::Tags &)"
+                      C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(99,25):
+                      "Node::Node(id_t,double,double,const Node::Tags &)": невозможно преобразовать аргумент 4 из "const double" в "const Node::Tags &"
+                          C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(99,36):
+                          Причина: невозможно преобразовать "const double" в "const Node::Tags"
+                          C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(99,36):
+                          Конструктор для class "std::vector<std::pair<std::string,std::string>,std::allocator<std::pair<std::string,std::string>>>" объявлен как "explicit"
+                  C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(99,25):
+                  при попытке сопоставить список аргументов "(const double, const double, const double, const double)"
+      C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(80,59):
+      или       "std::vector<std::array<std::array<size_t,2>,2>,std::allocator<std::array<std::array<size_t,2>,2>>> Bounds::scalesAndCoords(const std::array<double,3> &) const"
+          C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(99,9):
+          "std::vector<std::array<std::array<size_t,2>,2>,std::allocator<std::array<std::array<size_t,2>,2>>> Bounds::scalesAndCoords(const std::array<double,3> &) const": невозможно преобразовать аргумент 1 из "initializer list" в "const std::array<double,3> &"
+              C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(99,25):
+              Причина: невозможно преобразовать "initializer list" в "const std::array<double,3>"
+              C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(99,25):
+              Недопустимая агрегатная инициализация
+                  C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(99,36):
+                  слишком много инициализаторов
+      C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(99,9):
+      при попытке сопоставить список аргументов "(initializer list)"
+  
+C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(122,9): error C2665: "Bounds::scalesAndCoords": ни одна перегруженная функция не может преобразовать все типы аргументов
+      C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(97,59):
+      может быть "std::vector<std::array<std::array<size_t,2>,2>,std::allocator<std::array<std::array<size_t,2>,2>>> Bounds::scalesAndCoords(const Node &) const"
+          C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(122,9):
+          "std::vector<std::array<std::array<size_t,2>,2>,std::allocator<std::array<std::array<size_t,2>,2>>> Bounds::scalesAndCoords(const Node &) const": невозможно преобразовать аргумент 1 из "initializer list" в "const Node &"
+              C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(122,25):
+              Причина: невозможно преобразовать "initializer list" в "const Node"
+              C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(122,25):
+              "Node::Node": ни одна перегруженная функция не может преобразовать все типы аргументов
+                  C:\Users\Konstantin\source\repos\maps\maps\node.h(18,2):
+                  может быть "Node::Node(id_t,double,double,const Node::Tags &)"
+                      C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(122,25):
+                      "Node::Node(id_t,double,double,const Node::Tags &)": невозможно преобразовать аргумент 4 из "double" в "const Node::Tags &"
+                          C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(122,39):
+                          Причина: невозможно преобразовать "double" в "const Node::Tags"
+                          C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(122,39):
+                          Конструктор для class "std::vector<std::pair<std::string,std::string>,std::allocator<std::pair<std::string,std::string>>>" объявлен как "explicit"
+                  C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(122,25):
+                  при попытке сопоставить список аргументов "(double, double, double, double)"
+      C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(80,59):
+      или       "std::vector<std::array<std::array<size_t,2>,2>,std::allocator<std::array<std::array<size_t,2>,2>>> Bounds::scalesAndCoords(const std::array<double,3> &) const"
+          C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(122,9):
+          "std::vector<std::array<std::array<size_t,2>,2>,std::allocator<std::array<std::array<size_t,2>,2>>> Bounds::scalesAndCoords(const std::array<double,3> &) const": невозможно преобразовать аргумент 1 из "initializer list" в "const std::array<double,3> &"
+              C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(122,25):
+              Причина: невозможно преобразовать "initializer list" в "const std::array<double,3>"
+              C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(122,25):
+              Недопустимая агрегатная инициализация
+                  C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(122,39):
+                  слишком много инициализаторов
+      C:\Users\Konstantin\source\repos\maps\maps\bounds.cpp(122,9):
+      при попытке сопоставить список аргументов "(initializer list)"
+  
+  guiUtils.cpp
+C:\Users\Konstantin\source\repos\maps\maps\guiUtils.cpp(80,14): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Konstantin\source\repos\maps\maps\guiUtils.cpp(95,28): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Konstantin\source\repos\maps\maps\guiUtils.cpp(95,16): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+  main.cpp
+  map.cpp
+C:\Users\Konstantin\source\repos\maps\maps\map.cpp(97,30): warning C4334: <<: результат 32-разрядного смещения неявно преобразуется в 64-разрядное значение (предполагалось 64-разрядное смещение?)
+C:\Users\Konstantin\source\repos\maps\maps\map.cpp(107,30): warning C4334: <<: результат 32-разрядного смещения неявно преобразуется в 64-разрядное значение (предполагалось 64-разрядное смещение?)
+C:\Users\Konstantin\source\repos\maps\maps\map.cpp(125,30): warning C4334: <<: результат 32-разрядного смещения неявно преобразуется в 64-разрядное значение (предполагалось 64-разрядное смещение?)
+C:\Users\Konstantin\source\repos\maps\maps\map.cpp(135,24): warning C4334: <<: результат 32-разрядного смещения неявно преобразуется в 64-разрядное значение (предполагалось 64-разрядное смещение?)
+C:\Users\Konstantin\source\repos\maps\maps\map.cpp(144,37): warning C4334: <<: результат 32-разрядного смещения неявно преобразуется в 64-разрядное значение (предполагалось 64-разрядное смещение?)
+C:\Users\Konstantin\source\repos\maps\maps\map.cpp(212,14): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Konstantin\source\repos\maps\maps\map.cpp(216,14): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+  mapFiltering.cpp
+  myXmlParser.cpp
+  myXmlWriter.cpp
+  node.cpp
+  relation.cpp
+  way.cpp
+  Создание кода...
+C:\Users\Konstantin\source\repos\maps\maps\way.cpp(31,1): warning C4172: возвращаемый адрес локальной переменной или временного 
