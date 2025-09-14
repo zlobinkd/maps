@@ -179,7 +179,7 @@ Map::GraphRepresentation::GraphRepresentation(const Nodes& nodes, const Ways& wa
 	}
 
 	// under construction
-	//mergeNodes();
+	mergeNodes();
 }
 
 void Map::GraphRepresentation::mergeNodes() {
@@ -262,7 +262,74 @@ void Map::GraphRepresentation::mergeNodes(id_t i) {
 }
 
 void Map::GraphRepresentation::unfoldNodes(id_t i, const Nodes& nodes) {
-	// under construction
+	// there must be the left and right referenced nodes
+	if (_connectionRef[i].size() != 2)
+		return;
+
+	const id_t left = *_connectionRef[i].begin();
+	const id_t right = *(_connectionRef[i].rbegin());
+
+	for (const auto& connection : _connections[left].input) {
+		if (connection.from() != right)
+			continue;
+
+		const auto& path = connection.path();
+		if (std::find(path.begin(), path.end(), i) == path.end())
+			continue;
+
+		for (const auto& newConnection : connection.explode(nodes))
+		{
+			_connections[newConnection.to()].input.push_back(newConnection);
+			_connections[newConnection.from()].output.push_back(newConnection);
+			_connectionRef[newConnection.to()].clear();
+		}
+	}
+
+	for (const auto& connection : _connections[left].output) {
+		if (connection.to() != right)
+			continue;
+
+		const auto& path = connection.path();
+		if (std::find(path.begin(), path.end(), i) == path.end())
+			continue;
+
+		for (const auto& newConnection : connection.explode(nodes))
+		{
+			_connections[newConnection.from()].output.push_back(newConnection);
+			_connections[newConnection.to()].input.push_back(newConnection);
+			_connectionRef[newConnection.from()].clear();
+		}
+	}
+
+	if (_connectionRef[i].empty()) {
+		for (int j = _connections[left].input.size() - 1; j >= 0; j--)
+		{
+			const auto& path = _connections[left].input[j].path();
+			if (_connections[left].input[j].from() == right && std::find(path.begin(), path.end(), i) != path.end())
+				_connections[left].input.erase(_connections[left].input.begin() + j);
+		}
+
+		for (int j = _connections[right].input.size() - 1; j >= 0; j--)
+		{
+			const auto& path = _connections[right].input[j].path();
+			if (_connections[right].input[j].from() == left && std::find(path.begin(), path.end(), i) != path.end())
+				_connections[right].input.erase(_connections[right].input.begin() + j);
+		}
+
+		for (int j = _connections[left].output.size() - 1; j >= 0; j--)
+		{
+			const auto& path = _connections[left].output[j].path();
+			if (_connections[left].output[j].to() == right && std::find(path.begin(), path.end(), i) != path.end())
+				_connections[left].output.erase(_connections[left].output.begin() + j);
+		}
+
+		for (int j = _connections[right].output.size() - 1; j >= 0; j--)
+		{
+			const auto& path = _connections[right].output[j].path();
+			if (_connections[right].output[j].to() == left && std::find(path.begin(), path.end(), i) != path.end())
+				_connections[right].output.erase(_connections[right].output.begin() + j);
+		}
+	}
 }
 
 std::vector<id_t> Map::GraphRepresentation::shortestPath(id_t from, id_t to, const Nodes& nodes) {
@@ -308,8 +375,8 @@ std::vector<id_t> Map::GraphRepresentation::shortestPath(id_t from, id_t to, con
 		route.insert(route.begin(), currentNode);
 	}
 
-	//mergeNodes(from);
-	//mergeNodes(to);
+	mergeNodes(from);
+	mergeNodes(to);
 
 	return route;
 }

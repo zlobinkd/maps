@@ -26,3 +26,16 @@ Connection::Connection(const Connection& left, const Connection& right)
 	_path.push_back(left.to()); // == right.from()
 	_path.insert(_path.end(), right._path.begin(), right._path.end());
 }
+
+std::vector<Connection> Connection::explode(const Nodes& nodes) const {
+	if (_path.empty())
+		return { *this };
+
+	std::vector<Connection> result;
+	result.push_back(Connection{ _way, _from, _path.front(), {}, nodes });
+	for (size_t i = 1; i < _path.size(); i++)
+		result.push_back(Connection{ _way, _path[i - 1], _path[i], {}, nodes });
+
+	result.push_back(Connection{ _way, _path.back(), _to, {}, nodes });
+	return result;
+}
