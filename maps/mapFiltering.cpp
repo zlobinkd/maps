@@ -1,5 +1,6 @@
 #include "mapFiltering.h"
 #include <set>
+#include <map>
 
 MapInfoTuple dropUntraversableNodes(const Nodes& nodes,
 									const Ways& ways,
@@ -10,6 +11,7 @@ MapInfoTuple dropUntraversableNodes(const Nodes& nodes,
 
 	std::set<id_t> inclNodes;
 	std::set<id_t> inclWays;
+	auto nodeRefCount = std::vector<std::set<id_t>>(nodes.size(), {});
 
 	for (const auto& way : ways) {
 		if (way.refs().empty() || !way.hasTag("highway"))
@@ -17,11 +19,28 @@ MapInfoTuple dropUntraversableNodes(const Nodes& nodes,
 		if (way.hasTag("area") && way.tagValue("area") == "yes")
 			continue;
 
-		resultWays.emplace_back(way);
-		inclWays.insert(way.id());
+		for (const id_t id : way.refs())
+			nodeRefCount[id].insert(way.id());
+	}
+
+	for (const auto& way : ways) {
+		if (way.refs().empty() || !way.hasTag("highway"))
+			continue;
+		if (way.hasTag("area") && way.tagValue("area") == "yes")
+			continue;
+
+		for (const id_t id : way.refs())
+			if (nodeRefCount[id].size() > 1)
+			{
+				inclWays.insert(way.id());
+				resultWays.push_back(way);
+				break;
+			}
+	}
+
+	for (const auto& way : resultWays)
 		for (const id_t id : way.refs())
 			inclNodes.insert(id);
-	}
 
 	for (const auto& node : nodes)
 		if (inclNodes.contains(node.id()))
