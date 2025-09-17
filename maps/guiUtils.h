@@ -43,3 +43,20 @@ void updateImage(
 	const std::vector<id_t>& routeNodes);
 
 void onMouseEvent(int ev, int x, int y, int flags, void* userdata);
+
+const cv::Scalar BLACK = { 0, 0, 0 };
+const cv::Scalar RED = { 0, 0, 255 };
+const cv::Scalar GREEN = { 0, 255, 0 };
+const cv::Scalar BLUE = { 255, 0, 0 };
+const cv::Scalar WHITE = { 255, 255, 255 };
+const cv::Scalar GRAY = { 127, 127, 127 };
+const cv::Scalar LIGHT_GRAY = { 175, 175, 175 };
+const cv::Scalar BROWN = { 33, 67, 101 };
+const cv::Scalar LIGHT_BROWN = { 87, 122, 185 };
+const cv::Scalar ORANGE = { 0, 165, 255 };
+const cv::Scalar YELLOW = { 128, 213, 255 };
+const cv::Scalar BIEGE = { 176, 228, 239 };
+const cv::Scalar PINK = { 203, 192, 255 };
+const cv::Scalar CYAN = { 230, 216, 173 };
+const cv::Scalar PURPLE = { 163, 73, 163 };
+const cv::Scalar DARK_RED = { 21, 0, 136 };

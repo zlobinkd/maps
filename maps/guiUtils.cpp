@@ -8,34 +8,34 @@ cv::Scalar routeColor(std::string routeName) {
 	if (routeName == "footway" || routeName == "path" || routeName == "pedestrian"
 		|| routeName == "steps" || routeName == "elevator" || routeName == "platform"
 		|| routeName == "bridleway") {
-		return { 33, 67, 101 };
+		return BROWN;
 	}
 	else if (routeName == "motorway" || routeName == "primary") {
-		return { 0, 165, 255 };
+		return ORANGE;
 	}
 	else if (routeName == "motorway_link" || routeName == "primary_link") {
-		return { 128, 213, 255 };
+		return YELLOW;
 	}
 	else if (routeName == "unclassified" || routeName == "tertiary" || routeName == "secondary"
 		|| routeName == "secondary_link" || routeName == "tertiary_link" || routeName == "residential") {
-		return { 255, 255, 255 };
+		return WHITE;
 	}
 	else if (routeName == "track" || routeName == "construction" || routeName == "service") {
-		return { 203, 192, 255 };
+		return PINK;
 	}
 	else if (routeName == "cycleway") {
-		return { 0, 255, 0 };
+		return GREEN;
 	}
 	else if (routeName == "trunk") {
-		return { 255, 0, 0 };
+		return BLUE;
 	}
 	else if (routeName == "trunk_link") {
-		return { 230, 216, 173 };
+		return CYAN;
 	}
 	else if (routeName == "living_street") {
-		return { 127, 127, 127 };
+		return GRAY;
 	}
-	return { 0, 0, 255 };
+	return LIGHT_GRAY;
 }
 
 bool skipType(const std::string& routeName) {
@@ -80,7 +80,7 @@ static void drawLine(
 
 	int ptsSize = pts.size();
 	const auto* const d = pts.data();
-	cv::polylines(img, &d, &ptsSize, 1, false, color);
+	cv::polylines(img, &d, &ptsSize, 1, false, color, 3);
 }
 
 void updateImage(
@@ -92,7 +92,7 @@ void updateImage(
 	const std::optional<id_t>& startRoutePt,
 	const std::optional<id_t>& endRoutePt,
 	const std::vector<id_t>& routeNodes) {
-	img = cv::Mat(imageSizeX, imageSizeY, CV_8UC3, cv::Scalar{ 0. });
+	img = cv::Mat(imageSizeX, imageSizeY, CV_8UC3, LIGHT_GRAY);
 
 	for (const auto& wayId : map.waysToVisualize(bounds)) {
 		const auto& way = map.way(wayId);
@@ -107,7 +107,7 @@ void updateImage(
 		const auto coords = startNode.localCoords(bounds);
 		const auto x = int(coords[0] * imageSizeX);
 		const auto y = int(coords[1] * imageSizeY);
-		cv::circle(img, cv::Point(y, x), 5, cv::Scalar{ 0., 255., 0. }, 3);
+		cv::circle(img, cv::Point(y, x), 5, GREEN, 3);
 	}
 
 	if (endRoutePt.has_value()) {
@@ -115,16 +115,16 @@ void updateImage(
 		const auto coords = endNode.localCoords(bounds);
 		const auto x = int(coords[0] * imageSizeX);
 		const auto y = int(coords[1] * imageSizeY);
-		cv::circle(img, cv::Point(y, x), 5, cv::Scalar{ 0., 0., 255. }, 3);
+		cv::circle(img, cv::Point(y, x), 5, RED, 3);
 	}
 
 	if (routeNodes.size() > 1)
-		drawLine(img, routeNodes, map, bounds, imageSizeX, imageSizeY, cv::Scalar{ 0., 0., 255. });
+		drawLine(img, routeNodes, map, bounds, imageSizeX, imageSizeY, RED);
 
-	cv::Mat output;
+	//cv::Mat output;
 	// looks better? idk
-	cv::Laplacian(img, output, -1, 1);
-	cv::add(img, output, img);
+	//cv::Laplacian(img, output, -1, 1);
+	//cv::add(img, output, img);
 }
 
 // capture the route start- and end points
@@ -195,6 +195,7 @@ static void onMouseMoveEvent(int x, int y, void* userdata) {
 
 	const auto& img = *(data->image);
 	cv::Mat tempImg = cv::Mat::zeros(data->image->size(), data->image->type());
+	tempImg.setTo(LIGHT_GRAY);
 
 	// if the move is moved left, the ROI moves to the right...
 	const int shiftX = data->startMoveX.value() - x;
