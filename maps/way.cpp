@@ -34,3 +34,29 @@ const std::string& Way::tagValue(const std::string& tag) const {
 const std::vector<id_t>& Way::refs() const {
 	return _nodeIds;
 }
+
+double Way::speedLimit() const {
+	if (!hasTag("maxspeed"))
+		return 5.;
+
+	const std::string s = tagValue("maxspeed");
+	if (s == "walk")
+		return 5.;
+
+	if (s == "none")
+		return 130.;
+
+	if (s == "RU:urban")
+		return 60.;
+
+	if (s == "RU:rural")
+		return 90.;
+
+	if (s == "RU:motorway")
+		return 110.;
+
+	if (s == "RU:living_street")
+		return 15.;
+
+	return std::stod(s);
+}

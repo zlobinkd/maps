@@ -26,6 +26,8 @@ public:
 	// referenced nodes
 	const std::vector<id_t>& refs() const;
 
+	double speedLimit() const;
+
 private:
 	id_t _id;
 	// referenced nodes

@@ -47,7 +47,7 @@ static bool isMainRoad(std::string routeName) {
 		return true;
 	}
 	else if (routeName == "motorway_link" || routeName == "primary_link") {
-		return true;
+		return false;
 	}
 	else if (routeName == "unclassified" || routeName == "tertiary" || routeName == "secondary"
 		|| routeName == "secondary_link" || routeName == "tertiary_link" || routeName == "residential") {
@@ -63,7 +63,7 @@ static bool isMainRoad(std::string routeName) {
 		return true;
 	}
 	else if (routeName == "trunk_link") {
-		return true;
+		return false;
 	}
 	else if (routeName == "living_street") {
 		return false;
@@ -347,8 +347,9 @@ std::vector<id_t> Map::GraphRepresentation::shortestPath(id_t from, id_t to, con
 		auto nextNodes = std::set<id_t>{};
 		for (const id_t node : currentNodes) {
 			for (const auto& connection : _connections[node].output) {
-				if (routeLengths[connection.to()] > routeLengths[connection.from()] + connection.distance()) {
-					routeLengths[connection.to()] = routeLengths[connection.from()] + connection.distance();
+				const double maxSpeed = connection.way().speedLimit();
+				if (routeLengths[connection.to()] > routeLengths[connection.from()] + connection.distance() / maxSpeed) {
+					routeLengths[connection.to()] = routeLengths[connection.from()] + connection.distance() / maxSpeed;
 					prevNodes[connection.to()] = { connection.from(), &connection.way()};
 					if (routeLengths[connection.to()] < routeLengths[to])
 					{
@@ -388,8 +389,8 @@ Map::Map(const Nodes& nodes,
 	_nodes(nodes),
 	_ways(ways),
 	_relations(relations),
-	_guiRepresentation(nodes, ways, bounds),
-	_graphRepresentation(nodes, ways)
+	_guiRepresentation(_nodes, _ways, bounds),
+	_graphRepresentation(_nodes, _ways)
 {
 }
 
