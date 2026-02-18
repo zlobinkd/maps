@@ -31,16 +31,7 @@ cv::Scalar routeColor(std::string routeName);
 
 bool skipType(const std::string& routeName);
 
-// TODO: pack arguments to CallbackData
-void updateImage(
-	cv::Mat& img,
-	const Map& map,
-	size_t imageSizeX,
-	size_t imageSizeY,
-	const Bounds& bounds,
-	const std::optional<id_t>& startRoutePt,
-	const std::optional<id_t>& endRoutePt, 
-	const std::vector<id_t>& routeNodes);
+void updateImage(CallbackData&);
 
 void onMouseEvent(int ev, int x, int y, int flags, void* userdata);
 

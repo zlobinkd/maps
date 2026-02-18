@@ -26,12 +26,12 @@ static int browseMap() {
 	const size_t imageSizeY = (size_t)((double)imageSizeX * bounds.aspectRatio());
 	cv::Mat image;
 
-	updateImage(image, map, imageSizeX, imageSizeY, bounds, std::nullopt, std::nullopt, {});
-
 	auto boundsCopy = bounds;
 
 	auto callbackData = CallbackData{ &image, boundsCopy, map,
 										imageSizeX, imageSizeY };
+
+	updateImage(callbackData);
 	cv::imshow("Display window", image);
 	cv::setMouseCallback("Display window", onMouseEvent, &callbackData);
 	int k = cv::waitKey(0);
@@ -60,7 +60,7 @@ static int benchmark() {
 
 	auto& [nodes, ways, relations, bounds] = *res;
 
-	auto map = executeAndShowElapsedTime<Map>([&]() {return Map{ nodes, ways, relations, bounds }; });
+	auto map = executeAndShowElapsedTime<Map>([&]() { return Map{ nodes, ways, relations, bounds }; });
 
 	nodes.clear();
 	ways.clear();
@@ -70,9 +70,12 @@ static int benchmark() {
 		const size_t imageSizeX = 1000;
 		const size_t imageSizeY = (size_t)((double)imageSizeX * bounds.aspectRatio());
 		cv::Mat image;
-		updateImage(image, map, imageSizeX, imageSizeY, bounds, std::nullopt, std::nullopt, {});
 
 		auto boundsCopy = bounds;
+
+		auto callbackData = CallbackData{ &image, boundsCopy, map,
+										imageSizeX, imageSizeY };
+		updateImage(callbackData);
 		cv::imshow("Display window", image);
 		int k = cv::pollKey(); };
 

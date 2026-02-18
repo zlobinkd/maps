@@ -83,43 +83,35 @@ static void drawLine(
 	cv::polylines(img, &d, &ptsSize, 1, false, color, 3);
 }
 
-void updateImage(
-	cv::Mat& img,
-	const Map& map,
-	size_t imageSizeX,
-	size_t imageSizeY,
-	const Bounds& bounds,
-	const std::optional<id_t>& startRoutePt,
-	const std::optional<id_t>& endRoutePt,
-	const std::vector<id_t>& routeNodes) {
-	img = cv::Mat(imageSizeX, imageSizeY, CV_8UC3, LIGHT_GRAY);
+void updateImage(CallbackData& data) {
+	*data.image = cv::Mat(data.imageSizeX, data.imageSizeY, CV_8UC3, LIGHT_GRAY);
 
-	for (const auto& wayId : map.waysToVisualize(bounds)) {
-		const auto& way = map.way(wayId);
+	for (const auto& wayId : data.map.waysToVisualize(data.bounds)) {
+		const auto& way = data.map.way(wayId);
 		if (!way.hasTag("highway"))
 			continue;
 
-		drawLine(img, way.refs(), map, bounds, imageSizeX, imageSizeY, routeColor(way.tagValue("highway")));
+		drawLine(*data.image, way.refs(), data.map, data.bounds, data.imageSizeX, data.imageSizeY, routeColor(way.tagValue("highway")));
 	}
 
-	if (startRoutePt.has_value()) {
-		const auto& startNode = map.node(*startRoutePt);
-		const auto coords = startNode.localCoords(bounds);
-		const auto x = int(coords[0] * imageSizeX);
-		const auto y = int(coords[1] * imageSizeY);
-		cv::circle(img, cv::Point(y, x), 5, GREEN, 3);
+	if (data.startRoutePt.has_value()) {
+		const auto& startNode = data.map.node(*data.startRoutePt);
+		const auto coords = startNode.localCoords(data.bounds);
+		const auto x = int(coords[0] * data.imageSizeX);
+		const auto y = int(coords[1] * data.imageSizeY);
+		cv::circle(*data.image, cv::Point(y, x), 5, GREEN, 3);
 	}
 
-	if (endRoutePt.has_value()) {
-		const auto& endNode = map.node(*endRoutePt);
-		const auto coords = endNode.localCoords(bounds);
-		const auto x = int(coords[0] * imageSizeX);
-		const auto y = int(coords[1] * imageSizeY);
-		cv::circle(img, cv::Point(y, x), 5, RED, 3);
+	if (data.endRoutePt.has_value()) {
+		const auto& endNode = data.map.node(*data.endRoutePt);
+		const auto coords = endNode.localCoords(data.bounds);
+		const auto x = int(coords[0] * data.imageSizeX);
+		const auto y = int(coords[1] * data.imageSizeY);
+		cv::circle(*data.image, cv::Point(y, x), 5, RED, 3);
 	}
 
-	if (routeNodes.size() > 1)
-		drawLine(img, routeNodes, map, bounds, imageSizeX, imageSizeY, RED);
+	if (data.routeNodes.size() > 1)
+		drawLine(*data.image, data.routeNodes, data.map, data.bounds, data.imageSizeX, data.imageSizeY, RED);
 
 	//cv::Mat output;
 	// looks better? idk
@@ -142,7 +134,7 @@ static void onMouseRButtonUpEvent(int x, int y, void* userdata) {
 		data->routeNodes = data->map.shortestPath(data->startRoutePt.value(), data->endRoutePt.value());
 
 	auto& img = *(data->image);
-	updateImage(img, data->map, data->imageSizeX, data->imageSizeY, data->bounds, data->startRoutePt, data->endRoutePt, data->routeNodes);
+	updateImage(*data);
 	cv::imshow("Display window", img);
 }
 
@@ -160,7 +152,7 @@ static void onMouseWheelEvent(int x, int y, int flags, void* userdata) {
 	else
 		data->bounds.zoomOut(1. - (double)y / (double)data->imageSizeX, double(x) / (double)data->imageSizeY);
 
-	updateImage(img, data->map, data->imageSizeX, data->imageSizeY, data->bounds, data->startRoutePt, data->endRoutePt, data->routeNodes);
+	updateImage(*data);
 	cv::imshow("Display window", img);
 }
 
@@ -179,7 +171,7 @@ static void onMouseLButtonUpEvent(int x, int y, void* userdata) {
 	// upwards
 	data->bounds.shift(double(y - data->startMoveY.value()) / (double)data->imageSizeX,
 					   double(data->startMoveX.value() - x) / (double)data->imageSizeY);
-	updateImage(img, data->map, data->imageSizeX, data->imageSizeY, data->bounds, data->startRoutePt, data->endRoutePt, data->routeNodes);
+	updateImage(*data);
 	cv::imshow("Display window", img);
 
 	// reset the shift source point -> no image movement with mouse move event

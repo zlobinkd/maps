@@ -139,6 +139,8 @@
   <ItemGroup>
     <ClCompile Include="bounds.cpp" />
     <ClCompile Include="connection.cpp" />
+    <ClCompile Include="graphRepresentation.cpp" />
+    <ClCompile Include="guiRepresentation.cpp" />
     <ClCompile Include="guiUtils.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="map.cpp" />
@@ -154,6 +156,8 @@
     <ClInclude Include="bounds.h" />
     <ClInclude Include="connection.h" />
     <ClInclude Include="core.h" />
+    <ClInclude Include="graphRepresentation.h" />
+    <ClInclude Include="guiRepresentation.h" />
     <ClInclude Include="guiUtils.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="mapFiltering.h" />
