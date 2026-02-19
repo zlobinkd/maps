@@ -1,13 +1,16 @@
 #include "graphRepresentation.h"
 
+#include "mapData.h"
+
 #include <algorithm>
 
-GraphRepresentation::GraphRepresentation(const Nodes& nodes, const Ways& ways)
+GraphRepresentation::GraphRepresentation()
 {
+	const auto& nodes = MapData::instance().nodes();
 	_connections = std::vector<Connections>(nodes.size(), {});
 	_connectionRef = std::vector<std::set<id_t>>(nodes.size(), {});
 
-	for (const auto& way : ways) {
+	for (const auto& way : MapData::instance().ways()) {
 		for (size_t i = 1; i < way.refs().size(); i++) {
 			const id_t node1 = way.refs()[i - 1];
 			const id_t node2 = way.refs()[i];
@@ -110,7 +113,7 @@ void GraphRepresentation::mergeNodes(id_t i) {
 	}
 }
 
-void GraphRepresentation::unfoldNodes(id_t i, const Nodes& nodes) {
+void GraphRepresentation::unfoldNodes(id_t i) {
 	// there must be the left and right referenced nodes
 	if (_connectionRef[i].size() != 2)
 		return;
@@ -126,7 +129,7 @@ void GraphRepresentation::unfoldNodes(id_t i, const Nodes& nodes) {
 		if (std::find(path.begin(), path.end(), i) == path.end())
 			continue;
 
-		for (const auto& newConnection : connection.explode(nodes))
+		for (const auto& newConnection : connection.explode())
 		{
 			_connections[newConnection.to()].input.push_back(newConnection);
 			_connections[newConnection.from()].output.push_back(newConnection);
@@ -142,7 +145,7 @@ void GraphRepresentation::unfoldNodes(id_t i, const Nodes& nodes) {
 		if (std::find(path.begin(), path.end(), i) == path.end())
 			continue;
 
-		for (const auto& newConnection : connection.explode(nodes))
+		for (const auto& newConnection : connection.explode())
 		{
 			_connections[newConnection.from()].output.push_back(newConnection);
 			_connections[newConnection.to()].input.push_back(newConnection);
@@ -181,12 +184,12 @@ void GraphRepresentation::unfoldNodes(id_t i, const Nodes& nodes) {
 	}
 }
 
-std::vector<id_t> GraphRepresentation::shortestPath(id_t from, id_t to, const Nodes& nodes) {
-	unfoldNodes(from, nodes);
-	unfoldNodes(to, nodes);
+std::vector<id_t> GraphRepresentation::shortestPath(id_t from, id_t to) {
+	unfoldNodes(from);
+	unfoldNodes(to);
 	// init algorithm containers
-	auto routeLengths = std::vector<double>(nodes.size(), std::numeric_limits<double>().max());
-	auto prevNodes = std::vector<std::pair<id_t, const Way*>>(nodes.size(), { 0, nullptr });
+	auto routeLengths = std::vector<double>(MapData::instance().nodes().size(), std::numeric_limits<double>().max());
+	auto prevNodes = std::vector<std::pair<id_t, const Way*>>(MapData::instance().nodes().size(), { 0, nullptr });
 	routeLengths[from] = 0.;
 	prevNodes[from] = { from, nullptr };
 	auto currentNodes = std::set<id_t>{ from };

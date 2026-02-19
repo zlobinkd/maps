@@ -1,5 +1,7 @@
 #include "guiRepresentation.h"
 
+#include "mapData.h"
+
 static bool isRoad(std::string routeName) {
 	if (routeName == "footway" || routeName == "path" || routeName == "pedestrian"
 		|| routeName == "steps" || routeName == "elevator" || routeName == "platform"
@@ -84,10 +86,7 @@ const std::vector<id_t>& GuiRepresentation::Area::ways() const {
 	return _ways;
 }
 
-GuiRepresentation::GuiRepresentation(const Nodes& nodes,
-	const Ways& ways,
-	const Bounds& bounds)
-	: _fullBounds(bounds)
+GuiRepresentation::GuiRepresentation()
 {
 	// init grid
 	for (size_t scale = 0; scale < SCALES_NUM; scale++) {
@@ -98,8 +97,8 @@ GuiRepresentation::GuiRepresentation(const Nodes& nodes,
 	}
 
 	// assign nodes to the grid positions
-	for (const Node& node : nodes) {
-		const auto scalesAndCoords = _fullBounds.scalesAndCoords(node);
+	for (const Node& node : MapData::instance().nodes()) {
+		const auto scalesAndCoords = MapData::instance().bounds().scalesAndCoords(node);
 		for (size_t scale = 0; scale < scalesAndCoords.size(); scale++) {
 			const auto& areaIndX = scalesAndCoords[scale][0];
 			const auto& areaIndY = scalesAndCoords[scale][1];
@@ -111,8 +110,8 @@ GuiRepresentation::GuiRepresentation(const Nodes& nodes,
 	}
 
 	// assign ways to the grid positions: secondary roads et al. only appear when we zoom in.
-	for (const Way& way : ways) {
-		const auto scalesAndCoords = _fullBounds.scalesAndCoords(way, nodes);
+	for (const Way& way : MapData::instance().ways()) {
+		const auto scalesAndCoords = MapData::instance().bounds().scalesAndCoords(way);
 		for (size_t scale = 0; scale < scalesAndCoords.size(); scale++) {
 			if (!way.hasTag("highway") || scale < 2 && !isMainRoad(way.tagValue("highway")))
 				continue;
@@ -131,20 +130,20 @@ GuiRepresentation::GuiRepresentation(const Nodes& nodes,
 }
 
 const std::vector<id_t>& GuiRepresentation::waysToVisualize(const Bounds& bounds) const {
-	const auto [scale, x, y] = _fullBounds.scaleAndCoords(bounds);
+	const auto [scale, x, y] = MapData::instance().bounds().scaleAndCoords(bounds);
 	return _map[scale][(1 << scale) * x + y].ways();
 }
 
 // simple linear search
-id_t GuiRepresentation::closestPoint(double lat, double lon, const Nodes& nodes, const Bounds& bounds) const {
+id_t GuiRepresentation::closestPoint(double lat, double lon, const Bounds& bounds) const {
 	id_t res = 0;
 	auto temp = Node(0, lat, lon, {});
 
 	double minDist = std::numeric_limits<double>().max();
-	const auto [scale, x, y] = _fullBounds.scaleAndCoords(bounds);
+	const auto [scale, x, y] = MapData::instance().bounds().scaleAndCoords(bounds);
 	for (const id_t i : _map[scale][(1 << scale) * x + y].nodes())
-		if (Node::distance(temp, nodes[i]) < minDist) {
-			minDist = Node::distance(temp, nodes[i]);
+		if (Node::distance(temp, MapData::instance().nodes()[i]) < minDist) {
+			minDist = Node::distance(temp, MapData::instance().nodes()[i]);
 			res = i;
 		}
 	return res;

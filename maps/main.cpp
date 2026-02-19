@@ -3,30 +3,20 @@
 #include "mapFiltering.h"
 #include "guiUtils.h"
 #include "benchmark.h"
+#include "mapData.h"
 
 #include <cmath>
 #include <iostream>
 #include <chrono>
 
 static int browseMap() {
-	auto res = parseXML("path\\to\\file");
+	Map map;
 
-	if (!res.has_value())
-		return 1;
-
-	auto& [nodes, ways, relations, bounds] = *res;
-
-	Map map{ nodes, ways, relations, bounds };
-
-	nodes.clear();
-	ways.clear();
-	relations.clear();
+	auto boundsCopy = MapData::instance().bounds();
 
 	const size_t imageSizeX = 1000;
-	const size_t imageSizeY = (size_t)((double)imageSizeX * bounds.aspectRatio());
+	const size_t imageSizeY = (size_t)((double)imageSizeX * boundsCopy.aspectRatio());
 	cv::Mat image;
-
-	auto boundsCopy = bounds;
 
 	auto callbackData = CallbackData{ &image, boundsCopy, map,
 										imageSizeX, imageSizeY };
@@ -40,19 +30,16 @@ static int browseMap() {
 }
 
 static int compressXml() {
-	const auto res = parseXML("path\\to\\file");
-	if (!res.has_value())
-		return 1;
-
-	const auto& [nodes, ways, relations, bounds] = *res;
-	const auto& [compressedNodes, compressedWays, compressedRelations] = dropUntraversableNodes(nodes, ways, relations);
+	const auto& [compressedNodes, compressedWays, compressedRelations] = dropUntraversableNodes(
+		MapData::instance().nodes(), MapData::instance().ways(), MapData::instance().relations());
 	xmlWriter writer;
-	writer.write("path\\to\\file", compressedNodes, compressedWays, compressedRelations, bounds);
+	writer.write("path\\to\\file", compressedNodes, compressedWays, compressedRelations, MapData::instance().bounds());
 }
 
 
 
 static int benchmark() {
+	// ?..
 	const std::string filename = "path\\to\\file";
 	auto res = executeAndShowElapsedTime<std::optional<XmlOutputTuple>>(&parseXML, filename);
 	if (!res.has_value())
@@ -60,7 +47,7 @@ static int benchmark() {
 
 	auto& [nodes, ways, relations, bounds] = *res;
 
-	auto map = executeAndShowElapsedTime<Map>([&]() { return Map{ nodes, ways, relations, bounds }; });
+	auto map = executeAndShowElapsedTime<Map>([&]() { return Map{}; });
 
 	nodes.clear();
 	ways.clear();

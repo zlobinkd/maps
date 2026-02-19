@@ -144,6 +144,7 @@
     <ClCompile Include="guiUtils.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="map.cpp" />
+    <ClCompile Include="mapData.cpp" />
     <ClCompile Include="mapFiltering.cpp" />
     <ClCompile Include="myXmlParser.cpp" />
     <ClCompile Include="myXmlWriter.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="guiRepresentation.h" />
     <ClInclude Include="guiUtils.h" />
     <ClInclude Include="map.h" />
+    <ClInclude Include="mapData.h" />
     <ClInclude Include="mapFiltering.h" />
     <ClInclude Include="myXmlParser.h" />
     <ClInclude Include="myXmlWriter.h" />

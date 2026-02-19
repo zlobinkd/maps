@@ -13,7 +13,7 @@ class Way;
 // lon - longtitude, lat - latitude.
 class Bounds {
 public:
-	Bounds() = delete;
+	Bounds() {}
 	Bounds(double minLat, double maxLat, double minLon, double maxLon);
 
 	// get pixel coords from latitude and longtitude
@@ -87,7 +87,7 @@ public:
 	// grid coordinates of all scales for a node point.
 	std::vector<std::array<std::array<size_t, 2>, 2>> scalesAndCoords(const Node&) const;
 	// grid coordinates for a way.
-	std::vector<std::array<std::array<size_t, 2>, 2>> scalesAndCoords(const Way&, const std::vector<Node>&) const;
+	std::vector<std::array<std::array<size_t, 2>, 2>> scalesAndCoords(const Way&) const;
 
 private:
 	double _minLat;

@@ -1,6 +1,7 @@
 #include "bounds.h"
 #include "node.h"
 #include "way.h"
+#include "mapData.h"
 #include <cmath>
 #include <algorithm>
 
@@ -103,13 +104,13 @@ std::vector<std::array<std::array<size_t, 2>, 2>> Bounds::scalesAndCoords(const 
 	return scalesAndCoords({ x, y, x, y });
 }
 
-std::vector<std::array<std::array<size_t, 2>, 2>> Bounds::scalesAndCoords(const Way& way, const Nodes& nodes) const {
+std::vector<std::array<std::array<size_t, 2>, 2>> Bounds::scalesAndCoords(const Way& way) const {
 	double x1 = 100.;
 	double x2 = -100.;
 	double y1 = 100.;
 	double y2 = -100.;
 	for (const id_t ref : way.refs()) {
-		const auto [x, y] = nodes[ref].localCoords(*this);
+		const auto [x, y] = MapData::instance().nodes()[ref].localCoords(*this);
 		if (x < x1)
 			x1 = x;
 

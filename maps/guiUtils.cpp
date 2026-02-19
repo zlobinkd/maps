@@ -1,6 +1,7 @@
 #include "guiUtils.h"
 #include "way.h"
 #include "node.h"
+#include "mapData.h"
 
 #include <iostream>
 
@@ -63,7 +64,7 @@ static void drawLine(
 	const cv::Scalar& color) {
 	std::vector<cv::Point> pts;
 	for (const id_t ref : pointIds) {
-		const auto& node = map.node(ref);
+		const auto& node = MapData::instance().nodes()[ref];
 		const auto coords = node.localCoords(bounds);
 		const auto x = int(coords[0] * imageSizeX);
 		const auto y = int(coords[1] * imageSizeY);
@@ -87,7 +88,7 @@ void updateImage(CallbackData& data) {
 	*data.image = cv::Mat(data.imageSizeX, data.imageSizeY, CV_8UC3, LIGHT_GRAY);
 
 	for (const auto& wayId : data.map.waysToVisualize(data.bounds)) {
-		const auto& way = data.map.way(wayId);
+		const auto& way = MapData::instance().ways()[wayId];
 		if (!way.hasTag("highway"))
 			continue;
 
@@ -95,7 +96,7 @@ void updateImage(CallbackData& data) {
 	}
 
 	if (data.startRoutePt.has_value()) {
-		const auto& startNode = data.map.node(*data.startRoutePt);
+		const auto& startNode = MapData::instance().nodes()[*data.startRoutePt];
 		const auto coords = startNode.localCoords(data.bounds);
 		const auto x = int(coords[0] * data.imageSizeX);
 		const auto y = int(coords[1] * data.imageSizeY);
@@ -103,7 +104,7 @@ void updateImage(CallbackData& data) {
 	}
 
 	if (data.endRoutePt.has_value()) {
-		const auto& endNode = data.map.node(*data.endRoutePt);
+		const auto& endNode = MapData::instance().nodes()[*data.endRoutePt];
 		const auto coords = endNode.localCoords(data.bounds);
 		const auto x = int(coords[0] * data.imageSizeX);
 		const auto y = int(coords[1] * data.imageSizeY);

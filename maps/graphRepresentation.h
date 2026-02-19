@@ -9,11 +9,10 @@
 // map representation, optimized for the route search.
 class GraphRepresentation {
 public:
-	GraphRepresentation() = delete;
-	GraphRepresentation(const Nodes&, const Ways&);
+	GraphRepresentation();
 
 	// Dijkstra's algorithm
-	std::vector<id_t> shortestPath(id_t from, id_t to, const Nodes&);
+	std::vector<id_t> shortestPath(id_t from, id_t to);
 private:
 	struct Connections {
 		std::vector<Connection> input;
@@ -29,7 +28,7 @@ private:
 	// remove this and all neighboring vertices, if they only have two neighboring vertices.
 	void mergeNodes(id_t);
 	// re-introduce the vertex and the corresponding to it vertex "chain".
-	void unfoldNodes(id_t, const Nodes&);
+	void unfoldNodes(id_t);
 
 	// vector index corresponds to the referenced node, i.e. for each node, input and output connections
 	// are to be found in Connections.

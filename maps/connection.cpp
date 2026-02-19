@@ -1,6 +1,7 @@
 #include "connection.h"
 #include "way.h"
 #include "node.h"
+#include "mapData.h"
 
 Connection::Connection(const Way* way, id_t from, id_t to, const Nodes& nodes) 
 	: _way(way), _from(from), _to(to), _path({}), _distance(Node::distance(nodes[from], nodes[to]))
@@ -27,9 +28,11 @@ Connection::Connection(const Connection& left, const Connection& right)
 	_path.insert(_path.end(), right._path.begin(), right._path.end());
 }
 
-std::vector<Connection> Connection::explode(const Nodes& nodes) const {
+std::vector<Connection> Connection::explode() const {
 	if (_path.empty())
 		return { *this };
+
+	const auto& nodes = MapData::instance().nodes();
 
 	std::vector<Connection> result;
 	result.push_back(Connection{ _way, _from, _path.front(), {}, nodes });

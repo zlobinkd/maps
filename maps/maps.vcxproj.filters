@@ -54,6 +54,9 @@
     <ClCompile Include="graphRepresentation.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="mapData.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="myXmlParser.h">
@@ -96,6 +99,9 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="guiRepresentation.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="mapData.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

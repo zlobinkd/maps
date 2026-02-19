@@ -18,7 +18,7 @@ public:
 	// TODO: this must not always be successful. left.to() must be equal to right.from()
 	Connection(const Connection& left, const Connection& right);
 
-	std::vector<Connection> explode(const std::vector<Node>&) const;
+	std::vector<Connection> explode() const;
 
 	inline id_t to() const { return _to; }
 	inline id_t from() const { return _from; }
