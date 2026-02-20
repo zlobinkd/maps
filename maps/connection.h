@@ -13,10 +13,11 @@ class Node;
 class Connection {
 public:
 	Connection() = delete;
-	Connection(const Way* way, id_t from, id_t to, const std::vector<Node>&);
-	Connection(const Way* way, id_t from, id_t to, const std::vector<id_t>& path, const std::vector<Node>&);
-	// TODO: this must not always be successful. left.to() must be equal to right.from()
-	Connection(const Connection& left, const Connection& right);
+	Connection(const Way* way, id_t from, id_t to);
+	Connection(const Way* way, id_t from, id_t to, const std::vector<id_t>& path);
+
+	// left.to() must be equal to right.from()
+	static std::optional<Connection> create(const Connection& left, const Connection& right);
 
 	std::vector<Connection> explode() const;
 
@@ -30,6 +31,8 @@ public:
 	inline double distance() const { return _distance; }
 
 private:
+	Connection(const Connection& left, const Connection& right);
+
 	const Way* _way;
 	id_t _from;
 	id_t _to;

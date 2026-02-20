@@ -31,3 +31,27 @@ double Node::distance(const Node& first, const Node& second) {
 
 	return 6.4e6 * sqrt(dy2 + dx2);
 }
+
+bool Node::hasTag(const std::string& tag) const {
+	for (const auto& [key, _] : _tags)
+		if (key == tag)
+			return true;
+
+	return false;
+}
+
+bool Node::hasTagValue(const std::string& tag) const {
+	for (const auto& [_, value] : _tags)
+		if (value == tag)
+			return true;
+
+	return false;
+}
+
+const std::string& Node::tagValue(const std::string& tag) const {
+	for (const auto& [key, value] : _tags)
+		if (key == tag)
+			return value;
+
+	return "";
+}

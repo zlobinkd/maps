@@ -77,6 +77,9 @@ static void drawLine(
 		// V              *---->
 		//   Y            
 		pts.emplace_back(cv::Point{ y, x });
+
+		if (node.hasTag("highway") && node.tagValue("highway") == "traffic_signals")
+			cv::circle(img, cv::Point(y, x), 5, GREEN, 3);
 	}
 
 	int ptsSize = pts.size();
@@ -132,7 +135,19 @@ static void onMouseRButtonUpEvent(int x, int y, void* userdata) {
 		data->endRoutePt = data->map.closestPoint(coords[0], coords[1], data->bounds);
 
 	if (data->startRoutePt.has_value() && data->endRoutePt.has_value())
-		data->routeNodes = data->map.shortestPath(data->startRoutePt.value(), data->endRoutePt.value());
+	{
+		const auto route = data->map.shortestPath(data->startRoutePt.value(), data->endRoutePt.value());
+		if (route.empty())
+			return;
+
+		std::vector<id_t> routeNodes;
+		for (const auto& connection : route)
+			routeNodes.emplace_back(connection.from());
+
+		routeNodes.emplace_back(route.back().to());
+
+		data->routeNodes = routeNodes;
+	}
 
 	auto& img = *(data->image);
 	updateImage(*data);

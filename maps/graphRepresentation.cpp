@@ -3,6 +3,7 @@
 #include "mapData.h"
 
 #include <algorithm>
+#include <iostream>
 
 GraphRepresentation::GraphRepresentation()
 {
@@ -14,8 +15,8 @@ GraphRepresentation::GraphRepresentation()
 		for (size_t i = 1; i < way.refs().size(); i++) {
 			const id_t node1 = way.refs()[i - 1];
 			const id_t node2 = way.refs()[i];
-			_connections[node1].output.emplace_back(Connection{ &way, node1, node2, nodes });
-			_connections[node2].input.emplace_back(Connection{ &way, node1, node2, nodes });
+			_connections[node1].output.emplace_back(Connection{ &way, node1, node2 });
+			_connections[node2].input.emplace_back(Connection{ &way, node1, node2 });
 		}
 
 		//if both ways not allowed
@@ -25,8 +26,8 @@ GraphRepresentation::GraphRepresentation()
 		for (size_t i = 1; i < way.refs().size(); i++) {
 			const id_t node1 = way.refs()[i - 1];
 			const id_t node2 = way.refs()[i];
-			_connections[node2].output.emplace_back(Connection{ &way, node2, node1, nodes });
-			_connections[node1].input.emplace_back(Connection{ &way, node2, node1, nodes });
+			_connections[node2].output.emplace_back(Connection{ &way, node2, node1 });
+			_connections[node1].input.emplace_back(Connection{ &way, node2, node1 });
 		}
 	}
 
@@ -83,12 +84,17 @@ std::set<id_t> GraphRepresentation::mergeNode(id_t i) {
 				_connections[to].input.erase(_connections[to].input.begin() + k);
 
 		// add new connections.
-		auto newConnection = Connection{ _connections[i].input[j], _connections[i].output[j] };
-		_connections[from].output.push_back(newConnection);
-		_connections[to].input.push_back(newConnection);
+		auto newConnection = Connection::create(_connections[i].input[j], _connections[i].output[j]);
+		if (!newConnection.has_value())
+		{
+			std::cout << "Could not merge two connections!" << std::endl;
+			return {};
+		}
+		_connections[from].output.push_back(*newConnection);
+		_connections[to].input.push_back(*newConnection);
 
 		// set new node references.
-		for (id_t k : newConnection.path()) {
+		for (id_t k : newConnection->path()) {
 			_connectionRef[k].clear();
 			_connectionRef[k].insert(from);
 			_connectionRef[k].insert(to);
@@ -184,7 +190,7 @@ void GraphRepresentation::unfoldNodes(id_t i) {
 	}
 }
 
-std::vector<id_t> GraphRepresentation::shortestPath(id_t from, id_t to) {
+std::vector<Connection> GraphRepresentation::shortestPath(id_t from, id_t to) {
 	unfoldNodes(from);
 	unfoldNodes(to);
 	// init algorithm containers
@@ -214,18 +220,18 @@ std::vector<id_t> GraphRepresentation::shortestPath(id_t from, id_t to) {
 	}
 
 	// find the actual route
-	auto route = std::vector<id_t>{ to };
+	std::vector<Connection> route;
 	id_t currentNode = to;
 	while (currentNode != from)
 	{
 		for (const auto& connection : _connections[currentNode].input) {
 			if (connection.from() == prevNodes[currentNode].first && &connection.way() == prevNodes[currentNode].second) {
-				route.insert(route.begin(), connection.path().begin(), connection.path().end());
+				const auto connectionsToAppend = connection.explode();
+				route.insert(route.begin(), connectionsToAppend.begin(), connectionsToAppend.end());
 				break;
 			}
 		}
 		currentNode = prevNodes[currentNode].first;
-		route.insert(route.begin(), currentNode);
 	}
 
 	mergeNodes(from);

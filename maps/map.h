@@ -12,7 +12,7 @@ public:
 	// ways from the grid position according to current image boundaries
 	const std::vector<id_t>& waysToVisualize(const Bounds&) const;
 	// Dijkstra's algorithm
-	std::vector<id_t> shortestPath(id_t from, id_t to);
+	std::vector<Connection> shortestPath(id_t from, id_t to);
 	// closest map entry for the given arbitrary position
 	id_t closestPoint(double lat, double lon, const Bounds&) const;
 

@@ -3,13 +3,18 @@
 #include "node.h"
 #include "mapData.h"
 
-Connection::Connection(const Way* way, id_t from, id_t to, const Nodes& nodes) 
-	: _way(way), _from(from), _to(to), _path({}), _distance(Node::distance(nodes[from], nodes[to]))
+Connection::Connection(const Way* way, id_t from, id_t to) 
+	: _way(way), 
+	_from(from), 
+	_to(to), 
+	_path({}), 
+	_distance(Node::distance(MapData::instance().nodes()[from], MapData::instance().nodes()[to]))
 {}
 
-Connection::Connection(const Way* way, id_t from, id_t to, const std::vector<id_t>& path, const Nodes& nodes)
+Connection::Connection(const Way* way, id_t from, id_t to, const std::vector<id_t>& path)
 	: _way(way), _from(from), _to(to), _path(path)
 {
+	const auto& nodes = MapData::instance().nodes();
 	if (path.empty())
 		_distance += Node::distance(nodes[from], nodes[to]);
 	else {
@@ -18,6 +23,13 @@ Connection::Connection(const Way* way, id_t from, id_t to, const std::vector<id_
 		for (size_t i = 1; i < path.size(); i++)
 			_distance += Node::distance(nodes[path[i - 1]], nodes[path[i]]);
 	}
+}
+
+std::optional<Connection> Connection::create(const Connection& left, const Connection& right) {
+	if (left.to() != right.from())
+		return std::nullopt;
+
+	return Connection(left, right);
 }
 
 Connection::Connection(const Connection& left, const Connection& right)
@@ -32,13 +44,11 @@ std::vector<Connection> Connection::explode() const {
 	if (_path.empty())
 		return { *this };
 
-	const auto& nodes = MapData::instance().nodes();
-
 	std::vector<Connection> result;
-	result.push_back(Connection{ _way, _from, _path.front(), {}, nodes });
+	result.push_back(Connection{ _way, _from, _path.front(), {} });
 	for (size_t i = 1; i < _path.size(); i++)
-		result.push_back(Connection{ _way, _path[i - 1], _path[i], {}, nodes });
+		result.push_back(Connection{ _way, _path[i - 1], _path[i], {} });
 
-	result.push_back(Connection{ _way, _path.back(), _to, {}, nodes });
+	result.push_back(Connection{ _way, _path.back(), _to, {} });
 	return result;
 }

@@ -12,7 +12,7 @@ public:
 	GraphRepresentation();
 
 	// Dijkstra's algorithm
-	std::vector<id_t> shortestPath(id_t from, id_t to);
+	std::vector<Connection> shortestPath(id_t from, id_t to);
 private:
 	struct Connections {
 		std::vector<Connection> input;

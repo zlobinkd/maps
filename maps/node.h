@@ -25,6 +25,10 @@ public:
 	// distance between two nodes in meters
 	static double distance(const Node& one, const Node& other);
 
+	bool hasTag(const std::string& tag) const;
+	bool hasTagValue(const std::string& tag) const;
+	const std::string& tagValue(const std::string& tag) const;
+
 private:
 	id_t _id;
 	// latitude

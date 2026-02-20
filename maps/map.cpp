@@ -9,7 +9,7 @@ const std::vector<id_t>& Map::waysToVisualize(const Bounds& bounds) const {
 	return _guiRepresentation.waysToVisualize(bounds);
 }
 
-std::vector<id_t> Map::shortestPath(id_t from, id_t to) {
+std::vector<Connection> Map::shortestPath(id_t from, id_t to) {
 	return _graphRepresentation.shortestPath(from, to);
 }
 
