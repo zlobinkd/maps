@@ -13,6 +13,7 @@ public:
 	double speed() const override;
 	double progressOnCurrentSegment() const override;
 	Connection currentSegment() const override;
+	const std::vector<Connection> route() const override;
 	bool isOnMap() const override;
 
 private:

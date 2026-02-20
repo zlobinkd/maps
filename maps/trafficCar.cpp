@@ -74,6 +74,10 @@ Connection TrafficCar::currentSegment() const {
 	return _currentConnectionId < _route.size() ? _route[_currentConnectionId] : _route.back();
 }
 
+const std::vector<Connection> TrafficCar::route() const {
+	return std::vector<Connection>(_route.begin() + _currentConnectionId, _route.end());
+}
+
 bool TrafficCar::isOnMap() const {
 	return _currentConnectionId < _route.size();
 }

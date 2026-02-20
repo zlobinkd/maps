@@ -151,8 +151,10 @@
     <ClCompile Include="node.cpp" />
     <ClCompile Include="relation.cpp" />
     <ClCompile Include="trafficCar.cpp" />
+    <ClCompile Include="trafficDummy.cpp" />
     <ClCompile Include="trafficLight.cpp" />
     <ClCompile Include="trafficObject.cpp" />
+    <ClCompile Include="trafficSimulation.cpp" />
     <ClCompile Include="way.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -171,8 +173,10 @@
     <ClInclude Include="node.h" />
     <ClInclude Include="relation.h" />
     <ClInclude Include="trafficCar.h" />
+    <ClInclude Include="trafficDummy.h" />
     <ClInclude Include="trafficLight.h" />
     <ClInclude Include="trafficObject.h" />
+    <ClInclude Include="trafficSimulation.h" />
     <ClInclude Include="way.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

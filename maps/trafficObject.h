@@ -11,6 +11,7 @@ public:
 	virtual double speed() const = 0;
 	virtual double progressOnCurrentSegment() const = 0;
 	virtual Connection currentSegment() const = 0;
+	virtual const std::vector<Connection> route() const;
 	virtual bool isOnMap() const;
 
 	virtual bool isObstacle() const;
