@@ -8,8 +8,8 @@
 GraphRepresentation::GraphRepresentation()
 {
 	const auto& nodes = MapData::instance().nodes();
-	_connections = std::vector<Connections>(nodes.size(), {});
-	_connectionRef = std::vector<std::set<id_t>>(nodes.size(), {});
+	_connections = std::vector<Connections>(nodes.size());
+	_connectionRef = std::vector<std::set<id_t>>(nodes.size());
 
 	for (const auto& way : MapData::instance().ways()) {
 		for (size_t i = 1; i < way.refs().size(); i++) {

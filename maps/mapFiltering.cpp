@@ -11,7 +11,7 @@ MapInfoTuple dropUntraversableNodes(const Nodes& nodes,
 
 	std::set<id_t> inclNodes;
 	std::set<id_t> inclWays;
-	auto nodeRefCount = std::vector<std::set<id_t>>(nodes.size(), {});
+	auto nodeRefCount = std::vector<std::set<id_t>>(nodes.size());
 
 	for (const auto& way : ways) {
 		if (way.refs().empty() || !way.hasTag("highway"))
