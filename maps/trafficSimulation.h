@@ -15,7 +15,7 @@ public:
 	
 private:
 	void updateStep();
-	std::optional<std::pair<TrafficDummy, double>> findNextObject(const TrafficObject&);
+	std::optional<std::pair<TrafficDummy, double>> findNextObject(const TrafficObject&) const;
 	void fillDummies();
 	void updateObjects();
 	void clearDummies();

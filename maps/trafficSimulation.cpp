@@ -24,7 +24,7 @@ void TrafficSimulation::updateStep() {
 	addNewObjects();
 }
 
-std::optional<std::pair<TrafficDummy, double>> TrafficSimulation::findNextObject(const TrafficObject& object)
+std::optional<std::pair<TrafficDummy, double>> TrafficSimulation::findNextObject(const TrafficObject& object) const
 {
 	const auto route = object.route();
 	if (route.empty())
@@ -35,9 +35,6 @@ std::optional<std::pair<TrafficDummy, double>> TrafficSimulation::findNextObject
 	{
 		for (auto& iter : _dummies[route[i].from()]) {
 			if (iter.first.to() == route[i].to() && iter.first.way().id() == object.currentSegment().way().id()) {
-				std::sort(iter.second.begin(), iter.second.end(),
-					[](const TrafficDummy& d1, const TrafficDummy& d2) { return d1.progress() < d2.progress(); });
-
 				if (i == 0) {
 					const auto& it = std::find_if(iter.second.begin(), iter.second.end(),
 						[&object](const TrafficDummy& d) {return d.progress() > object.progressOnCurrentSegment(); });
@@ -67,6 +64,11 @@ void TrafficSimulation::fillDummies() {
 			for (auto& [connection, dummies] : _dummies[object.currentSegment().from()])
 				if (connection.way().id() == object.currentSegment().way().id() && connection.to() == object.currentSegment().to())
 					dummies.emplace_back(object);
+
+	for (auto& iter : _dummies)
+		for (auto& [connection, dummies] : iter)
+			std::sort(dummies.begin(), dummies.end(),
+				[](const TrafficDummy& d1, const TrafficDummy& d2) { return d1.progress() < d2.progress(); });
 }
 
 void TrafficSimulation::updateObjects() {
