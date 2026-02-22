@@ -28,6 +28,7 @@ public:
 	bool hasTag(const std::string& tag) const;
 	bool hasTagValue(const std::string& tag) const;
 	const std::string& tagValue(const std::string& tag) const;
+	void addTag(const std::string& key, const std::string& val);
 
 private:
 	id_t _id;

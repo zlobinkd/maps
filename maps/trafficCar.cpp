@@ -22,7 +22,7 @@ void TrafficCar::update(const double distanceToNextObject, const double nextObje
 
 	const double speedUpdate = maxAcceleration *
 		(1 
-			- std::pow(_speed / currentSegment().way().speedLimit() * 3.6, 4) 
+			- std::pow(_speed / currentSegment().way().speedLimit(), 4) 
 			- std::pow(desiredGap / distanceToNextObject, 2)
 		);
 

@@ -37,26 +37,26 @@ const std::vector<id_t>& Way::refs() const {
 
 double Way::speedLimit() const {
 	if (!hasTag("maxspeed"))
-		return 5.;
+		return 5. / 3.6;
 
 	const std::string s = tagValue("maxspeed");
 	if (s == "walk")
-		return 5.;
+		return 5. / 3.6;
 
 	if (s == "none")
-		return 130.;
+		return 130. / 3.6;
 
 	if (s == "RU:urban")
-		return 60.;
+		return 60. / 3.6;
 
 	if (s == "RU:rural")
-		return 90.;
+		return 90. / 3.6;
 
 	if (s == "RU:motorway")
-		return 110.;
+		return 110. / 3.6;
 
 	if (s == "RU:living_street")
-		return 15.;
+		return 15. / 3.6;
 
-	return std::stod(s);
+	return std::stod(s) / 3.6;
 }

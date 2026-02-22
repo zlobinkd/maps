@@ -55,3 +55,7 @@ const std::string& Node::tagValue(const std::string& tag) const {
 
 	return "";
 }
+
+void Node::addTag(const std::string& key, const std::string& val) {
+	_tags.push_back({ key, val });
+}

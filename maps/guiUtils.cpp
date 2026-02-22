@@ -54,6 +54,26 @@ bool skipType(const std::string& routeName) {
 	return false;
 }
 
+static cv::Scalar generateDistinctColor(int index) {
+	// Use golden angle in HSV for maximum distinctiveness
+	float hue = (index * 137.5f);  // 137.5 degrees is the golden angle
+	hue = fmod(hue, 360.0f);
+
+	// Convert HSV to BGR (OpenCV uses BGR)
+	cv::Mat hsv(1, 1, CV_8UC3);
+	hsv.at<cv::Vec3b>(0, 0) = cv::Vec3b(
+		static_cast<uchar>(hue / 2.0f),  // Hue (0-180 in OpenCV)
+		255,                              // Saturation
+		255                               // Value
+	);
+
+	cv::Mat bgr;
+	cv::cvtColor(hsv, bgr, cv::COLOR_HSV2BGR);
+
+	cv::Vec3b color = bgr.at<cv::Vec3b>(0, 0);
+	return cv::Scalar(color[0], color[1], color[2]);
+}
+
 static void drawLine(
 	cv::Mat& img, 
 	const std::vector<id_t>& pointIds, 
@@ -79,7 +99,12 @@ static void drawLine(
 		pts.emplace_back(cv::Point{ y, x });
 
 		if (node.hasTag("highway") && node.tagValue("highway") == "traffic_signals")
-			cv::circle(img, cv::Point(y, x), 5, GREEN, 3);
+		{
+			if (node.hasTag("cluster") && node.tagValue("cluster") == "-1")
+				cv::circle(img, cv::Point(y, x), 5, BLACK, 3);
+			else
+				cv::circle(img, cv::Point(y, x), 5, generateDistinctColor(std::stoi(node.tagValue("cluster"))), 3);
+		}
 	}
 
 	int ptsSize = pts.size();
@@ -124,15 +149,20 @@ void updateImage(CallbackData& data) {
 }
 
 // capture the route start- and end points
-// TODO: better logic
 static void onMouseRButtonUpEvent(int x, int y, void* userdata) {
 	auto* data = static_cast<CallbackData*>(userdata);
 
 	const auto coords = data->bounds.globalCoords(double(y) / data->imageSizeX, double(x) / data->imageSizeY);
-	if (!data->startRoutePt.has_value() || data->endRoutePt.has_value())
+	if (!data->startRoutePt.has_value())
 		data->startRoutePt = data->map.closestPoint(coords[0], coords[1], data->bounds);
-	else
+	else if (!data->endRoutePt.has_value())
 		data->endRoutePt = data->map.closestPoint(coords[0], coords[1], data->bounds);
+	else
+	{
+		data->startRoutePt.reset();
+		data->endRoutePt.reset();
+		data->routeNodes.clear();
+	}
 
 	if (data->startRoutePt.has_value() && data->endRoutePt.has_value())
 	{
@@ -152,6 +182,14 @@ static void onMouseRButtonUpEvent(int x, int y, void* userdata) {
 	auto& img = *(data->image);
 	updateImage(*data);
 	cv::imshow("Display window", img);
+}
+
+// show the node id
+static void onMouseMButtonUpEvent(int x, int y, void* userdata) {
+	auto* data = static_cast<CallbackData*>(userdata);
+
+	const auto coords = data->bounds.globalCoords(double(y) / data->imageSizeX, double(x) / data->imageSizeY);
+	std::cout << data->map.closestPoint(coords[0], coords[1], data->bounds) << std::endl;
 }
 
 // zoom in/out
@@ -255,5 +293,8 @@ void onMouseEvent(int ev, int x, int y, int flags, void* userdata) {
 	}
 	else if (ev == cv::EVENT_RBUTTONUP) {
 		onMouseRButtonUpEvent(x, y, userdata);
+	}
+	else if (ev == cv::EVENT_MBUTTONUP) {
+		onMouseMButtonUpEvent(x, y, userdata);
 	}
 }

@@ -7,7 +7,26 @@
 
 #include <cmath>
 #include <iostream>
+#include <fstream>
 #include <chrono>
+
+static int dumpStreetSignals() {
+	std::ofstream file("path\\to\\file");
+
+	if (file.is_open())
+	{
+		for (const auto& node : MapData::instance().nodes())
+			if (node.hasTag("highway") && node.tagValue("highway") == "traffic_signals")
+			{
+				const auto& bounds = MapData::instance().bounds();
+				const auto& coords = node.localCoords(bounds);
+				file << node.id() << " " << coords[0] << " " << coords[1] * bounds.aspectRatio() << std::endl;
+			}
+
+		return 0;
+	}
+	return 1;
+}
 
 static int browseMap() {
 	Map map;
