@@ -12,16 +12,19 @@
 #include "way.h"
 #include "map.h"
 
+// Data used for OpenCV callback processing
 struct CallbackData {
 	cv::Mat* image;
+	// boundaries of the current image on the map
 	Bounds& bounds;
 	Map& map;
+	// image dimensions
 	const size_t imageSizeX;
 	const size_t imageSizeY;
-	// for shift
+	// image shift: mouse position on the screen at the start of dragging motion
 	std::optional<int> startMoveX;
 	std::optional<int> startMoveY;
-	// route
+	// route nodes
 	std::optional<id_t> startRoutePt;
 	std::optional<id_t> endRoutePt;
 	std::vector<id_t> routeNodes;

@@ -15,8 +15,8 @@ GraphRepresentation::GraphRepresentation()
 		for (size_t i = 1; i < way.refs().size(); i++) {
 			const id_t node1 = way.refs()[i - 1];
 			const id_t node2 = way.refs()[i];
-			_connections[node1].output.emplace_back(Connection{ &way, node1, node2 });
-			_connections[node2].input.emplace_back(Connection{ &way, node1, node2 });
+			_connections[node1].output.emplace_back(Connection{ way.id(), node1, node2});
+			_connections[node2].input.emplace_back(Connection{ way.id(), node1, node2});
 		}
 
 		//if both ways not allowed
@@ -26,8 +26,8 @@ GraphRepresentation::GraphRepresentation()
 		for (size_t i = 1; i < way.refs().size(); i++) {
 			const id_t node1 = way.refs()[i - 1];
 			const id_t node2 = way.refs()[i];
-			_connections[node2].output.emplace_back(Connection{ &way, node2, node1 });
-			_connections[node1].input.emplace_back(Connection{ &way, node2, node1 });
+			_connections[node2].output.emplace_back(Connection{ way.id(), node2, node1 });
+			_connections[node1].input.emplace_back(Connection{ way.id(), node2, node1 });
 		}
 	}
 
@@ -50,14 +50,14 @@ std::set<id_t> GraphRepresentation::mergeNode(id_t i) {
 		return {};
 
 	// ways not the same: cannot remove (for safety)
-	const auto* way = &_connections[i].input.front().way();
-	if (&_connections[i].input.back().way() != way)
+	const id_t wayId = _connections[i].input.front().wayId();
+	if (_connections[i].input.back().wayId() != wayId)
 		return {};
 
-	if (&_connections[i].output.front().way() != way)
+	if (_connections[i].output.front().wayId() != wayId)
 		return {};
 
-	if (&_connections[i].output.back().way() != way)
+	if (_connections[i].output.back().wayId() != wayId)
 		return {};
 
 	// align inputs and outputs
@@ -76,11 +76,11 @@ std::set<id_t> GraphRepresentation::mergeNode(id_t i) {
 
 		// remove old connections.
 		for (int k = _connections[from].output.size() - 1; k >= 0; k--)
-			if (_connections[from].output[k].to() == i && &_connections[from].output[k].way() == way)
+			if (_connections[from].output[k].to() == i && _connections[from].output[k].wayId() == wayId)
 				_connections[from].output.erase(_connections[from].output.begin() + k);
 
 		for (int k = _connections[to].input.size() - 1; k >= 0; k--)
-			if (_connections[to].input[k].from() == i && &_connections[to].input[k].way() == way)
+			if (_connections[to].input[k].from() == i && _connections[to].input[k].wayId() == wayId)
 				_connections[to].input.erase(_connections[to].input.begin() + k);
 
 		// add new connections.

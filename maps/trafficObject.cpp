@@ -1,6 +1,6 @@
 #include "trafficObject.h"
 
-const std::vector<Connection> TrafficObject::route() const {
+const std::vector<Connection> TrafficObject::remainingRoute() const {
 	return {};
 }
 

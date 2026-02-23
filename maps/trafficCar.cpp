@@ -74,7 +74,7 @@ Connection TrafficCar::currentSegment() const {
 	return _currentConnectionId < _route.size() ? _route[_currentConnectionId] : _route.back();
 }
 
-const std::vector<Connection> TrafficCar::route() const {
+const std::vector<Connection> TrafficCar::remainingRoute() const {
 	return std::vector<Connection>(_route.begin() + _currentConnectionId, _route.end());
 }
 

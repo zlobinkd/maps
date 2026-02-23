@@ -5,7 +5,7 @@
 #include <fstream>
 #include <sstream>
 
-struct TrafficLightAssignment {
+struct TrafficSignalAssignment {
 	id_t id;
 	int cluster;
 };
@@ -20,8 +20,8 @@ static std::vector<std::string> split(const std::string& s, char delimiter) {
 	return tokens;
 }
 
-static std::vector<TrafficLightAssignment> readTrafficLightAssignments(std::string filename) {
-	std::vector<TrafficLightAssignment> points;
+static std::vector<TrafficSignalAssignment> readTrafficSignalAssignments(std::string filename) {
+	std::vector<TrafficSignalAssignment> points;
 	std::ifstream file(filename);
 
 	if (!file.is_open()) {
@@ -32,7 +32,7 @@ static std::vector<TrafficLightAssignment> readTrafficLightAssignments(std::stri
 	std::string line;
 	while (std::getline(file, line)) {
 		std::stringstream ss(line);
-		TrafficLightAssignment p;
+		TrafficSignalAssignment p;
 		
 		const auto splitLine = split(line, '\t');
 		p.id = std::stoi(splitLine[0]);
@@ -59,7 +59,7 @@ MapData::MapData() {
 	_relations = relations;
 	_bounds = bounds;
 
-	const auto assignments = readTrafficLightAssignments("path\\to\\file");
+	const auto assignments = readTrafficSignalAssignments("path\\to\\file");
 	for (const auto& assignment : assignments)
 		_nodes[assignment.id].addTag("cluster", std::to_string(assignment.cluster));
 }

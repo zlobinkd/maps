@@ -60,7 +60,7 @@
     <ClCompile Include="trafficObject.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="trafficLight.cpp">
+    <ClCompile Include="trafficSignal.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="trafficCar.cpp">
@@ -122,7 +122,7 @@
     <ClInclude Include="trafficObject.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="trafficLight.h">
+    <ClInclude Include="trafficSignal.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="trafficCar.h">
