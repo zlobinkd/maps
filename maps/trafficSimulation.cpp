@@ -65,7 +65,7 @@ std::optional<std::pair<TrafficDummy, double>> TrafficSimulation::findNextObject
 
 			if (i == 0) {
 				const auto nextObstacle = connectionLoad.findNext(object.progressOnCurrentSegment());
-				if (!nextObstacle.has_value())
+				if (nextObstacle.has_value())
 				{
 					const double progressDiff = nextObstacle->progress() - object.progressOnCurrentSegment();
 					distance = progressDiff * object.currentSegment().distance();
