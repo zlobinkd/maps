@@ -81,7 +81,8 @@ static void drawLine(
 	const Bounds& bounds,
 	const size_t imageSizeX,
 	const size_t imageSizeY,
-	const cv::Scalar& color) {
+	const cv::Scalar& color,
+	const double speed = 0.) {
 	std::vector<cv::Point> pts;
 	for (const id_t ref : pointIds) {
 		const auto& node = MapData::instance().nodes()[ref];
@@ -110,6 +111,12 @@ static void drawLine(
 	int ptsSize = pts.size();
 	const auto* const d = pts.data();
 	cv::polylines(img, &d, &ptsSize, 1, false, color, 3);
+
+	if (pts.size() > 1)
+	{
+		const size_t spdIdx = pts.size() / 2;
+		cv::putText(img, std::to_string(int(speed * 3.6)), pts[spdIdx], cv::FONT_HERSHEY_SIMPLEX, 0.3, cv::Scalar(0, 0, 0));
+	}
 }
 
 void updateImage(CallbackData& data) {
@@ -120,7 +127,7 @@ void updateImage(CallbackData& data) {
 		if (!way.hasTag("highway"))
 			continue;
 
-		drawLine(*data.image, way.refs(), data.map, data.bounds, data.imageSizeX, data.imageSizeY, routeColor(way.tagValue("highway")));
+		drawLine(*data.image, way.refs(), data.map, data.bounds, data.imageSizeX, data.imageSizeY, routeColor(way.tagValue("highway")), way.speedLimit());
 	}
 
 	if (data.startRoutePt.has_value()) {
