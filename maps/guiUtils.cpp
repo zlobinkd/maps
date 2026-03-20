@@ -84,7 +84,10 @@ static void drawLine(
 	const cv::Scalar& color,
 	const double speed = 0.) {
 	std::vector<cv::Point> pts;
-	for (const id_t ref : pointIds) {
+	for (size_t i = 0; i < pointIds.size(); i++) {
+		const id_t ref = pointIds[i];
+		const auto prev = i > 0 ? std::make_optional(pointIds[i - 1]) : std::nullopt;
+		const auto next = i + 1 < pointIds.size() ? std::make_optional(pointIds[i + 1]) : std::nullopt;
 		const auto& node = MapData::instance().nodes()[ref];
 		const auto coords = node.localCoords(bounds);
 		const auto x = int(coords[0] * imageSizeX);
@@ -99,12 +102,32 @@ static void drawLine(
 		//   Y            
 		pts.emplace_back(cv::Point{ y, x });
 
-		if (node.hasTag("highway") && node.tagValue("highway") == "traffic_signals")
+		if (prev.has_value())
 		{
-			if (node.hasTag("cluster") && node.tagValue("cluster") == "-1")
-				cv::circle(img, cv::Point(y, x), 5, BLACK, 3);
-			else
-				cv::circle(img, cv::Point(y, x), 5, generateDistinctColor(std::stoi(node.tagValue("cluster"))), 3);
+			if (const auto label = MapData::instance().synchroLabel(ref, *prev)) {
+				const auto& nodePrev = MapData::instance().nodes()[*prev];
+				const auto coordsPrev = nodePrev.localCoords(bounds);
+				const auto xPrev = int(coordsPrev[0] * imageSizeX);
+				const auto yPrev = int(coordsPrev[1] * imageSizeY);
+				if (label == 0)
+					cv::line(img, cv::Point(y, x), cv::Point(yPrev, xPrev), RED, 10);
+				else
+					cv::line(img, cv::Point(y, x), cv::Point(yPrev, xPrev), GREEN, 10);
+			}
+		}
+
+		if (next.has_value())
+		{
+			if (const auto label = MapData::instance().synchroLabel(ref, *next)) {
+				const auto& nodeNext = MapData::instance().nodes()[*next];
+				const auto coordsNext = nodeNext.localCoords(bounds);
+				const auto xNext = int(coordsNext[0] * imageSizeX);
+				const auto yNext = int(coordsNext[1] * imageSizeY);
+				if (label == 0)
+					cv::line(img, cv::Point(y, x), cv::Point(yNext, xNext), RED, 10);
+				else
+					cv::line(img, cv::Point(y, x), cv::Point(yNext, xNext), GREEN, 10);
+			}
 		}
 	}
 

@@ -9,19 +9,68 @@
 #include <iostream>
 #include <fstream>
 #include <chrono>
+#include <map>
+
+struct TrafficSignalInfo {
+	id_t nodeId;
+	std::vector<Connection> connections;
+	double x;
+	double y;
+};
 
 static int dumpStreetSignals() {
-	std::ofstream file("path\\to\\file");
+	std::ofstream file("C:\\Users\\Konstantin\\Desktop\\streetSignalsMoscow.csv");
 
 	if (file.is_open())
 	{
-		for (const auto& node : MapData::instance().nodes())
-			if (node.hasTag("highway") && node.tagValue("highway") == "traffic_signals")
+		std::map<id_t, TrafficSignalInfo> infos;
+		const auto& bounds = MapData::instance().bounds();
+		const auto& nodes = MapData::instance().nodes();
+		for (const auto& way : MapData::instance().ways())
+			for (size_t i = 0; i < way.refs().size(); i++)
 			{
-				const auto& bounds = MapData::instance().bounds();
-				const auto& coords = node.localCoords(bounds);
-				file << node.id() << " " << coords[0] << " " << coords[1] * bounds.aspectRatio() << std::endl;
+				const auto& node = nodes[way.refs()[i]];
+				if (node.tagValue("highway") != "traffic_signals")
+					continue;
+
+				const auto& [x, y] = node.localCoords(bounds);
+				const auto nextNode = i < way.refs().size() - 1 ?
+					std::make_optional(nodes[way.refs()[i + 1]]) :
+					std::nullopt;
+				const auto prevNode = i > 0 ?
+					std::make_optional(nodes[way.refs()[i - 1]]) :
+					std::nullopt;
+
+				if (prevNode.has_value()) {
+					infos[node.id()].nodeId = node.id();
+					infos[node.id()].x = x;
+					infos[node.id()].y = y;
+					infos[node.id()].connections.push_back(Connection{ way.id(),prevNode->id(), node.id() });
+				}
+
+				if (way.tagValue("oneway") == "yes")
+					continue;
+
+				if (nextNode.has_value()) {
+					infos[node.id()].nodeId = node.id();
+					infos[node.id()].x = x;
+					infos[node.id()].y = y;
+					infos[node.id()].connections.push_back(Connection{ way.id(), node.id(), nextNode->id() });
+				}
 			}
+
+		for (const auto& [_, signalInfo] : infos)
+		{
+			file << signalInfo.nodeId << " " << signalInfo.x << " " << signalInfo.y * bounds.aspectRatio();
+			for (const auto& connection : signalInfo.connections)
+			{
+				const auto& otherNode = connection.from() != signalInfo.nodeId ? 
+					nodes[connection.from()] : nodes[connection.to()];
+				const auto& [x, y] = otherNode.localCoords(bounds);
+				file << " " << otherNode.id() << " " << x << " " << y * bounds.aspectRatio();
+			}
+			file << std::endl;
+		}
 
 		return 0;
 	}

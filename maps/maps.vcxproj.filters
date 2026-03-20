@@ -72,6 +72,9 @@
     <ClCompile Include="trafficSimulation.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="trafficSignalSynchro.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="myXmlParser.h">
@@ -132,6 +135,9 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="trafficDummy.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="trafficSignalSynchro.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

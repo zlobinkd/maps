@@ -154,6 +154,7 @@
     <ClCompile Include="trafficDummy.cpp" />
     <ClCompile Include="trafficSignal.cpp" />
     <ClCompile Include="trafficObject.cpp" />
+    <ClCompile Include="trafficSignalSynchro.cpp" />
     <ClCompile Include="trafficSimulation.cpp" />
     <ClCompile Include="way.cpp" />
   </ItemGroup>
@@ -176,6 +177,7 @@
     <ClInclude Include="trafficDummy.h" />
     <ClInclude Include="trafficSignal.h" />
     <ClInclude Include="trafficObject.h" />
+    <ClInclude Include="trafficSignalSynchro.h" />
     <ClInclude Include="trafficSimulation.h" />
     <ClInclude Include="way.h" />
   </ItemGroup>
