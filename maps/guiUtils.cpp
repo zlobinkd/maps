@@ -129,6 +129,11 @@ static void drawLine(
 					cv::line(img, cv::Point(y, x), cv::Point(yNext, xNext), GREEN, 10);
 			}
 		}
+
+		if (const auto cluster = MapData::instance().trafficSignalCluster(ref)) {
+			const auto color = generateDistinctColor(*cluster);
+			cv::circle(img, cv::Point(y, x), 5, color, 3);
+		}
 	}
 
 	int ptsSize = pts.size();

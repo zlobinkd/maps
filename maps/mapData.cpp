@@ -51,7 +51,7 @@ static std::vector<TrafficSignalAssignment> readTrafficSignalAssignments(std::st
 }
 
 MapData::MapData() {
-	auto res = parseXML("C:\\Users\\Konstantin\\Downloads\\mapMoscow3");
+	auto res = parseXML("C:\\MapsFiles\\mapAachen3");
 
 	if (!res.has_value())
 		return;
@@ -63,7 +63,7 @@ MapData::MapData() {
 	_relations = relations;
 	_bounds = bounds;
 	_synchroIndex = std::vector<std::optional<size_t>>(_nodes.size());
-	const auto assignments = readTrafficSignalAssignments("C:\\Users\\Konstantin\\Desktop\\streetSignalsMoscow_clustered.csv");
+	const auto assignments = readTrafficSignalAssignments("C:\\MapsFiles\\streetSignalsAachen_clustered.csv");
 	id_t currentTrafficSignalId = 0;
 	for (const auto& assignment : assignments) {
 		const auto it = std::find_if(_trafficSignalSynchros.begin(), _trafficSignalSynchros.end(),
@@ -88,4 +88,12 @@ std::optional<int> MapData::synchroLabel(const id_t node, const id_t neighbor) c
 		return std::nullopt;
 
 	return _trafficSignalSynchros[*synchroIndex].synchroInfo(node, neighbor);
+}
+
+std::optional<int> MapData::trafficSignalCluster(id_t node) const {
+	const auto& synchroIndex = _synchroIndex[node];
+	if (!synchroIndex.has_value())
+		return std::nullopt;
+
+	return _trafficSignalSynchros[*synchroIndex].clusterId();
 }

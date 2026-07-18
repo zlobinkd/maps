@@ -82,15 +82,15 @@ def reshape_to_structure(nested_template, flat_data):
 
 # Main execution for DBSCAN
 if __name__ == "__main__":
-    filename = "C:\\Users\\Konstantin\\Desktop\\streetSignalsMoscow.csv"  # Replace with your file name
+    filename = "C:\\MapsFiles\\streetSignalsAachen.csv"  # Replace with your file name
     
     # Read points
     points, ids, neighbors_vectors, neighbor_ids = read_points_from_file(filename)
     
     # Perform DBSCAN clustering
     eps_mos = 0.006
-    eps_aac = 0.666
-    labels, scaler = cluster_dbscan(points, eps=eps_mos, min_samples=2)
+    eps_aac = 0.03
+    labels, scaler = cluster_dbscan(points, eps=eps_aac, min_samples=2)
     
     labels_unique = np.unique(labels)
     idx = np.where(labels_unique == -1)[0]

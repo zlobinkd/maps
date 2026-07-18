@@ -33,6 +33,9 @@ public:
 
 	std::optional<int> synchroLabel(id_t node, id_t neighbor) const;
 
+	// debug only
+	std::optional<int> trafficSignalCluster(id_t node) const;
+
 private:
 	MapData();
 
